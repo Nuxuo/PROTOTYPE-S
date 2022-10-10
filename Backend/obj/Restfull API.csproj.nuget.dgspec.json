@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\andre\\Desktop\\PROTOTYPE S\\backend\\Restfull API.csproj": {}
+    "C:\\Users\\andre\\Desktop\\PROTOTYPE S\\Backend\\Restfull API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\andre\\Desktop\\PROTOTYPE S\\backend\\Restfull API.csproj": {
+    "C:\\Users\\andre\\Desktop\\PROTOTYPE S\\Backend\\Restfull API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\andre\\Desktop\\PROTOTYPE S\\backend\\Restfull API.csproj",
+        "projectUniqueName": "C:\\Users\\andre\\Desktop\\PROTOTYPE S\\Backend\\Restfull API.csproj",
         "projectName": "Restfull API",
-        "projectPath": "C:\\Users\\andre\\Desktop\\PROTOTYPE S\\backend\\Restfull API.csproj",
+        "projectPath": "C:\\Users\\andre\\Desktop\\PROTOTYPE S\\Backend\\Restfull API.csproj",
         "packagesPath": "C:\\Users\\andre\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\andre\\Desktop\\PROTOTYPE S\\backend\\obj\\",
+        "outputPath": "C:\\Users\\andre\\Desktop\\PROTOTYPE S\\Backend\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

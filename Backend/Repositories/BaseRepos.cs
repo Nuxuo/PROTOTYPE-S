@@ -10,22 +10,22 @@ namespace Repositories{
         protected IMapper _mapper;
 
 
-        public bool UserExists(Guid _guid){
-            return _context.Users.Where(x=>!x.SoftDeleted).FirstOrDefault(x=>x.guId == _guid) != null ? true : false;
+        public async Task<bool> UserExists(Guid _guid){
+            return await _context.Users.Where(x=>!x.SoftDeleted).FirstOrDefaultAsync(x=>x.guId == _guid) != null ? true : false;
         }
         
-        public bool PostExists(Guid _guid){
-            return _context.Posts.Find(_guid) != null ? true : false;
+        public async Task<bool> PostExists(Guid _guid){
+            return await _context.Posts.FirstOrDefaultAsync(x=>x.guId == _guid) != null ? true : false;
         }
 
-        public bool CommentExists(Guid _guid){
-            return _context.Comments.Where(x=>!x.SoftDeleted).FirstOrDefault(x=>x.guId == _guid) != null ? true : false;
+        public async Task<bool> CommentExists(Guid _guid){
+            return await _context.Comments.Where(x=>!x.SoftDeleted).FirstOrDefaultAsync(x=>x.guId == _guid) != null ? true : false;
         }
 
 
-        public bool SoftDeleteCommentById(Guid _guid){
-            if(CommentExists(_guid)){
-                var _comment = _context.Comments.Find(_guid);
+        public async Task<bool> SoftDeleteCommentById(Guid _guid){
+            if(await CommentExists(_guid)){
+                var _comment = await _context.Comments.FirstOrDefaultAsync(x=>x.guId == _guid);
                 _comment.SoftDeleted = true;
                 _context.SaveChanges();
                 return true;
@@ -34,9 +34,9 @@ namespace Repositories{
                 return false;
             }
         }
-        public bool SoftDeleteUserById(Guid _guid){
-            if(UserExists(_guid)){
-                var _User = _context.Users.Find(_guid);
+        public async Task<bool> SoftDeleteUserById(Guid _guid){
+            if(await UserExists(_guid)){
+                var _User = await _context.Users.FirstOrDefaultAsync(x=>x.guId == _guid);
                 _User.SoftDeleted = true;
                 _context.SaveChanges();
                 return true;
@@ -47,53 +47,67 @@ namespace Repositories{
         }
 
 
-        public bool HardDeleteCommentById(Guid _guid){
-            var _comment = _context.Comments.Find(_guid);
-            if (_comment == null) { return false; }
-
-            var _userCommentRelations = _context.UserCommentRelations.Where(x=>x.CommentGuid == _guid);
+        public async Task<bool> HardDeleteCommentById(Guid _guid){
+            var _c = await _context.Comments.FirstOrDefaultAsync(x=>x.guId == _guid);
+            var _userCommentRelations = await _context.UserCommentRelations.Where(x=>x.CommentGuid == _guid).ToListAsync();
             foreach(UserCommentRelation _upr in _userCommentRelations){
                 _context.UserCommentRelations.Remove(_upr);
+                _context.SaveChanges();
             }
-            _context.SaveChanges();
-            _context.Comments.Remove(_comment);
+            
+            _context.Comments.Remove(_c);
             _context.SaveChanges();
 
             return true;
         }
 
-        public bool HardDeletePostById(Guid _guid){
-            var _post = _context.Posts.Find(_guid);
-            if (_post == null) { return false; }
+        public async Task<bool> HardDeletePostById(Guid _guid){
+            var _p = _context.Posts.FirstOrDefault(x=>x.guId == _guid);
 
-            var _postTag = _context.PostTags.Where(x=>x.PostGuid == _guid);
+            var _postTag = await _context.PostTags.Where(x=>x.PostGuid == _p.guId).ToListAsync();
             foreach(PostTag _t in _postTag){
                 _context.PostTags.Remove(_t);
-            }            
+                _context.SaveChanges();
+            }    
+
+            var _userRelations = await _context.UserPostRelations.Where(x=>x.PostGuid == _p.guId).ToListAsync();
+            foreach(UserPostRelation _upr in _userRelations){
+                _context.UserPostRelations.Remove(_upr);
+                _context.SaveChanges();
+            }        
             
-            var _comments = _context.Comments.Where(x=>x.PostGuid == _guid);
+            var _comments = await _context.Comments.Where(x=>x.PostGuid == _p.guId).ToListAsync();
+            if (_comments == null) { return false; }
             foreach(Comment _c in _comments){
-                HardDeleteCommentById(_c.guId);
+                await HardDeleteCommentById(_c.guId);
             }
 
 
             _context.SaveChanges();
-            _context.Posts.Remove(_post);
+            _context.Posts.Remove(_p);
             _context.SaveChanges();
 
             return true;
         }
 
-        public bool HardDeleteUserById(Guid _guid){
-            var _User = _context.Users.Find(_guid);
-            if (_User == null) { return false; }
+        public async Task<bool> HardDeleteUserById(Guid _guid){
+            var _u = _context.Users.FirstOrDefault(x=>x.guId == _guid);
+            if (_u == null) { return false; }
+            Console.WriteLine("User found");
 
-            var _posts = _context.Posts.Where(x=>x.UserGuid == _guid);
+            var _userTags = await _context.UserTags.Where(x=>x.UserGuid == _guid).ToListAsync();
+            foreach(UserTag _ut in _userTags){
+                _context.UserTags.Remove(_ut);
+                _context.SaveChanges();
+            }    
+
+            var _posts = await _context.Posts.Where(x=>x.UserGuid == _guid).ToListAsync();
+            if (_posts == null) { return false; }
             foreach(Post _p in _posts){
-                HardDeletePostById(_p.guId);
+                await HardDeletePostById(_p.guId);
             }
 
-            _context.Users.Remove(_User);
+            _context.Users.Remove(_u);
             _context.SaveChanges();
             return true;
         }

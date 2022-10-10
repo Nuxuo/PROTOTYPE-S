@@ -18,6 +18,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IUserRepos, UserRepos>();
 builder.Services.AddScoped<ICommentRepos, CommentRepos>();
+builder.Services.AddScoped<ITestingRepos, TestingRepos>();
 builder.Services.AddScoped<IPostRepos, PostRepos>();
 builder.Services.AddScoped<IBaseRepos, BaseRepos>();
 

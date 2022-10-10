@@ -23,8 +23,8 @@ namespace Controllers{
         }
 
         [HttpGet("{_guid}")]
-        public ActionResult<Comment> GetComment(Guid _guid){
-            if(!_repos.CommentExists(_guid))
+        public async Task<ActionResult<Comment>> GetComment(Guid _guid){
+            if(await _repos.CommentExists(_guid) == false)
                 return NotFound();
 
             var _result = _repos.GetCommentById(_guid);
@@ -37,11 +37,11 @@ namespace Controllers{
         }
 
         [HttpDelete("Soft/{_guid}")]
-        public ActionResult SoftDeleteComment(Guid _guid){
-            if(!_repos.CommentExists(_guid))
+        public async Task<ActionResult> SoftDeleteComment(Guid _guid){
+            if(await _repos.CommentExists(_guid) == false)
                 return NotFound();
 
-            var _result = _repos.SoftDeleteCommentById(_guid);
+            var _result = _repos.SoftDeleteCommentById(_guid).Result;
 
             if(_result)
                 _logger.LogInformation("Soft Deleted comment : " + _guid,DateTime.UtcNow.ToLongTimeString());
@@ -50,11 +50,11 @@ namespace Controllers{
         }
 
         [HttpDelete("Hard/{_guid}")]
-        public ActionResult HardDeleteComment(Guid _guid){
-            if(!_repos.CommentExists(_guid))
+        public async Task<ActionResult> HardDeleteComment(Guid _guid){
+            if(await _repos.CommentExists(_guid) == false)
                 return NotFound();
 
-            var _result = _repos.HardDeleteCommentById(_guid);
+            var _result = _repos.HardDeleteCommentById(_guid).Result;
 
             if(_result)
                 _logger.LogInformation("Hard Deleted comment : " + _guid,DateTime.UtcNow.ToLongTimeString());
@@ -77,8 +77,8 @@ namespace Controllers{
         }
 
         [HttpPut("{_guid}")]
-        public ActionResult UpdateComment(Guid _guid,[FromBody] CommentEntryDto _input){
-            if(!_repos.CommentExists(_guid))
+        public async Task<ActionResult> UpdateComment(Guid _guid,[FromBody] CommentEntryDto _input){
+            if(await _repos.CommentExists(_guid) == false)
                 return NotFound();
 
             var _result = _repos.UpdateComment(_guid,_input);

@@ -37,8 +37,8 @@ namespace Controllers{
         }
 
         [HttpGet("{_guid}")]
-        public IActionResult GetPostById(Guid _guid){
-            if(!_repos.PostExists(_guid))
+        public async Task<IActionResult> GetPostById(Guid _guid){
+            if(await _repos.PostExists(_guid) == false)
                 return NotFound();
 
             var _result = _repos.GetPostById(_guid);
@@ -61,11 +61,11 @@ namespace Controllers{
         }
 
         [HttpDelete("{_guid}")]
-        public ActionResult DeletePost(Guid _guid){
-            if(!_repos.PostExists(_guid))
+        public async Task<IActionResult> DeletePost(Guid _guid){
+            if(await _repos.PostExists(_guid) == false)
                 return NotFound();
 
-            var _result = _repos.HardDeletePostById(_guid);
+            var _result = _repos.HardDeletePostById(_guid).Result;
 
             if(_result)
                 _logger.LogInformation("Deleted post : " + _guid,DateTime.UtcNow.ToLongTimeString());
@@ -89,8 +89,8 @@ namespace Controllers{
         }
 
         [HttpPut("{_guid}")]
-        public ActionResult UpdateUser(Guid _guid,[FromBody] PostEntryDto _input){
-            if(!_repos.PostExists(_guid))
+        public async Task<IActionResult> UpdatePost(Guid _guid,[FromBody] PostEntryDto _input){
+            if(await _repos.PostExists(_guid) == false)
                 return NotFound();
 
             var _result = _repos.UpdatePost(_guid,_input);
@@ -119,7 +119,7 @@ namespace Controllers{
                 new Link(_linkGenerator.GetUriByAction(HttpContext, nameof(DeletePost), values: new {_guid}),
                 "self_delete",
                 "DELETE"),
-                new Link(_linkGenerator.GetUriByAction(HttpContext, nameof(UpdateUser), values: new {_guid}),
+                new Link(_linkGenerator.GetUriByAction(HttpContext, nameof(UpdatePost), values: new {_guid}),
                 "update_post",
                 "PUT")
             };

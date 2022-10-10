@@ -37,8 +37,8 @@ namespace Controllers{
         }
 
         [HttpGet("{_guid}")]
-        public IActionResult GetUserById(Guid _guid){
-            if(!_repos.UserExists(_guid))
+        public async Task<IActionResult> GetUserById(Guid _guid){
+            if(await _repos.UserExists(_guid) == false)
                 return NotFound();
 
             var _result = _repos.GetUserById(_guid);
@@ -51,8 +51,8 @@ namespace Controllers{
         }
 
         [HttpGet("{_guid}/Posts")]
-        public IActionResult GetUserPosts(Guid _guid){
-            if(!_repos.UserExists(_guid))
+        public async Task<IActionResult> GetUserPosts(Guid _guid){
+            if(await _repos.UserExists(_guid) == false)
                 return NotFound();
 
             var _result = _repos.GetUsersPosts(_guid);
@@ -64,8 +64,8 @@ namespace Controllers{
         }
    
         [HttpGet("{_guid}/Comments")]
-        public IActionResult GetUserComments(Guid _guid){
-            if(!_repos.UserExists(_guid))
+        public async Task<IActionResult> GetUserComments(Guid _guid){
+            if(await _repos.UserExists(_guid) == false)
                 return NotFound();
 
             var _result = _repos.GetUsersComments(_guid);
@@ -77,8 +77,8 @@ namespace Controllers{
         }
 
         [HttpGet("{_guid}/Tags")]
-        public IActionResult GetUserTags(Guid _guid){
-            if(!_repos.UserExists(_guid))
+        public async Task<IActionResult> GetUserTags(Guid _guid){
+            if(await _repos.UserExists(_guid) == false)
                 return NotFound();
 
             var _result = _repos.GetUsersTags(_guid);
@@ -90,8 +90,8 @@ namespace Controllers{
         }
 
         [HttpGet("{_guid}/Relation/Posts")]
-        public IActionResult GetUserPostRelations(Guid _guid){
-            if(!_repos.UserExists(_guid))
+        public async Task<IActionResult> GetUserPostRelations(Guid _guid){
+            if(await _repos.UserExists(_guid) == false)
                 return NotFound();
 
             var _result = _repos.GetUsersUserPostRelation(_guid);
@@ -103,8 +103,8 @@ namespace Controllers{
         }
 
         [HttpGet("{_guid}/Relation/Comments")]
-        public IActionResult GetUserCommentRelations(Guid _guid){
-            if(!_repos.UserExists(_guid))
+        public async Task<IActionResult> GetUserCommentRelations(Guid _guid){
+            if(await _repos.UserExists(_guid) == false)
                 return NotFound();
 
             var _result = _repos.GetUsersUserCommentRelation(_guid);
@@ -117,8 +117,8 @@ namespace Controllers{
 
 
         [HttpGet("{_guid}/TargetedPosts/{ammount}")]
-        public IActionResult GetUserTargetedPosts(Guid _guid, int ammount){
-            if(!_repos.UserExists(_guid))
+        public async Task<IActionResult> GetUserTargetedPosts(Guid _guid, int ammount){
+            if(await _repos.UserExists(_guid) == false)
                 return NotFound();
 
             var _result = _repos.GetUsersTargetedPosts(_guid, ammount);
@@ -134,11 +134,11 @@ namespace Controllers{
         }
 
         [HttpDelete("Soft/{_guid}")]
-        public ActionResult SoftDeleteUser(Guid _guid){
-            if(!_repos.UserExists(_guid))
+        public async Task<IActionResult> SoftDeleteUser(Guid _guid){
+            if(await _repos.UserExists(_guid) == false)
                 return NotFound();
 
-            if(_repos.SoftDeleteUserById(_guid)==false)
+            if(!_repos.SoftDeleteUserById(_guid).Result)
                 return BadRequest();
 
             LogInformation("Soft deleted user ", _guid);
@@ -147,11 +147,11 @@ namespace Controllers{
         }
 
         [HttpDelete("Hard/{_guid}")]
-        public ActionResult HardDeleteUser(Guid _guid){
-            if(!_repos.UserExists(_guid))
+        public async Task<IActionResult> HardDeleteUser(Guid _guid){
+            if(await _repos.UserExists(_guid) == false)
                 return NotFound();
 
-            if(_repos.HardDeleteUserById(_guid)==false)
+            if(!_repos.HardDeleteUserById(_guid).Result)
                 return BadRequest();
 
             LogInformation("Hard deleted user ", _guid);
@@ -175,8 +175,8 @@ namespace Controllers{
         }
 
         [HttpPut("{_guid}")]
-        public ActionResult UpdateUser(Guid _guid,[FromBody] UserEntryDto _input){
-            if(!_repos.UserExists(_guid))
+        public async Task<IActionResult> UpdateUser(Guid _guid,[FromBody] UserEntryDto _input){
+            if(await _repos.UserExists(_guid) == false)
                 return NotFound();
 
             var _result = _repos.UpdateUser(_guid,_input);
@@ -193,12 +193,12 @@ namespace Controllers{
         }
 
         [HttpPut("{_guid}/togglePostRelation/{PostGuid}/{status}")]
-        public ActionResult togglePostRelation(Guid _guid,Guid PostGuid,bool status){
-            if(!_repos.UserExists(_guid))
-                return NotFound("User missing.");
+        public async Task<IActionResult> togglePostRelation(Guid _guid,Guid PostGuid,bool status){
+            if(await _repos.UserExists(_guid) == false)
+                return NotFound();
 
-            if(!_repos.PostExists(PostGuid))
-                return NotFound("Post missing.");
+            if(await _repos.PostExists(PostGuid) == false)
+                return NotFound();
 
             var _result = _repos.ToggleUserPostRelation(_guid,PostGuid,status);
 
@@ -211,11 +211,11 @@ namespace Controllers{
         }
 
         [HttpPut("{_guid}/toggleCommentRelation/{CommentGuid}/{status}")]
-        public ActionResult toggleCommentRelation(Guid _guid, Guid CommentGuid, bool status){
-            if(!_repos.UserExists(_guid))
+        public async Task<IActionResult> toggleCommentRelation(Guid _guid, Guid CommentGuid, bool status){
+            if(await _repos.UserExists(_guid) == false)
                 return NotFound();
 
-            if(!_repos.CommentExists(CommentGuid))
+            if(await _repos.CommentExists(CommentGuid) == false)
                 return NotFound();
 
             var _result = _repos.ToggleUserCommentRelation(_guid,CommentGuid,status);
