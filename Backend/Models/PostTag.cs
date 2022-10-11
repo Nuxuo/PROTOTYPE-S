@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Models{
     public class PostTag : BaseModel_Id {
-        public Guid PostGuid {get; set;}
-        [ForeignKey("PostGuid")]
+        public Guid PostId {get; set;}
+        [ForeignKey("PostId")]
         public Post Post {get; set;}
 
-        public Guid TagGuid {get; set;}
-        [ForeignKey("TagGuid")]
+        public Guid TagId {get; set;}
+        [ForeignKey("TagId")]
         public Tag Tag {get; set;}
     }
 }

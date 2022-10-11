@@ -17,34 +17,34 @@ namespace Repositories{
 
         public User GetUserById(Guid id){
             return _context.Users
-            .FirstOrDefault(x => x.guId == id);
+            .FirstOrDefault(x => x.Id == id);
         }
 
-        public IEnumerable<UserPostRelation> GetUsersUserPostRelation(Guid _guid){
-            return _context.UserPostRelations.Where(x=>x.UserGuid == _guid).ToList();
+        public IEnumerable<UserPostRelation> GetUsersUserPostRelation(Guid _Id){
+            return _context.UserPostRelations.Where(x=>x.UserId == _Id).ToList();
         }
 
-        public IEnumerable<UserCommentRelation> GetUsersUserCommentRelation(Guid _guid){
-            return _context.UserCommentRelations.Where(x=>x.UserGuid == _guid).ToList();
+        public IEnumerable<UserCommentRelation> GetUsersUserCommentRelation(Guid _Id){
+            return _context.UserCommentRelations.Where(x=>x.UserId == _Id).ToList();
         }
 
-        public IEnumerable<Comment> GetUsersComments(Guid _guid){
-            return _context.Comments.Where(x => x.UserGuid == _guid).ToList();
+        public IEnumerable<Comment> GetUsersComments(Guid _Id){
+            return _context.Comments.Where(x => x.UserId == _Id).ToList();
         }
-        public IEnumerable<Post> GetUsersPosts(Guid _guid){
+        public IEnumerable<Post> GetUsersPosts(Guid _Id){
             return _context.Posts
                 .Include(x=>x.Tags)
                     .ThenInclude(x=>x.Tag)
-                .Where(x => x.UserGuid == _guid)
+                .Where(x => x.UserId == _Id)
             .ToList();
         }
-        public IEnumerable<UserTag> GetUsersTags(Guid _guid){
+        public IEnumerable<UserTag> GetUsersTags(Guid _Id){
             return _context.UserTags
                 .Include(x=>x.Tag)
-                    .Where(x => x.UserGuid == _guid).ToList();
+                    .Where(x => x.UserId == _Id).ToList();
         }
 
-        public IEnumerable<PostRatingDto> GetUsersTargetedPosts(Guid _guid, int ammount){
+        public IEnumerable<PostRatingDto> GetUsersTargetedPosts(Guid _Id, int ammount){
             List<PostRatingDto> _returnList = new List<PostRatingDto>();
 
             var _Posts = _context.Posts
@@ -53,14 +53,14 @@ namespace Repositories{
                 .OrderBy(x=>x.CreatedDate)
                 .Take(100);
 
-            var _UserRelation = GetUsersUserPostRelation(_guid);
-            var _UserTags = _context.UserTags.Where(x=>x.UserGuid == _guid).ToList();
+            var _UserRelation = GetUsersUserPostRelation(_Id);
+            var _UserTags = _context.UserTags.Where(x=>x.UserId == _Id).ToList();
 
             foreach (Post _p in _Posts){
-                if(_UserRelation.FirstOrDefault(x=>x.PostGuid ==_p.guId) == null){
+                if(_UserRelation.FirstOrDefault(x=>x.PostId ==_p.Id) == null){
                     int _rating = 0;
                     foreach (PostTag _pt in _p.Tags){
-                        UserTag _userTag = _UserTags.FirstOrDefault(x=>x.TagGuid == _pt.TagGuid);
+                        UserTag _userTag = _UserTags.FirstOrDefault(x=>x.TagId == _pt.TagId);
                         if(_userTag == null)
                             break;
                         _rating = _rating + _userTag.Likes; 
@@ -94,8 +94,8 @@ namespace Repositories{
 
 
         // PUT
-        public User UpdateUser(Guid _guid, UserEntryDto _input){
-            var _User = _context.Users.Find(_guid);
+        public User UpdateUser(Guid _Id, UserEntryDto _input){
+            var _User = _context.Users.Find(_Id);
 
             _User.Firstname = _input.Firstname;
             _User.Lastname = _input.Lastname;
@@ -107,15 +107,15 @@ namespace Repositories{
         }
 
         public string ToggleUserPostRelation(Guid _UserGuid, Guid _PostGuid, bool _status){
-            UserPostRelation _userpostRelation = _context.UserPostRelations.FirstOrDefault(x=>x.PostGuid == _PostGuid && x.UserGuid == _UserGuid);
-            Post _post = _context.Posts.Include(x=>x.Tags).FirstOrDefault(x => x.guId == _PostGuid);
-            User _user = _context.Users.Include(x=>x.Tags).Include(x=>x.UserPostRelation).FirstOrDefault(x => x.guId == _UserGuid);
+            UserPostRelation _userpostRelation = _context.UserPostRelations.FirstOrDefault(x=>x.PostId == _PostGuid && x.UserId == _UserGuid);
+            Post _post = _context.Posts.Include(x=>x.Tags).FirstOrDefault(x => x.Id == _PostGuid);
+            User _user = _context.Users.Include(x=>x.Tags).Include(x=>x.UserPostRelation).FirstOrDefault(x => x.Id == _UserGuid);
             string _repsonse = _status.ToString();
 
             if(_userpostRelation == null){
                 _userpostRelation = new UserPostRelation{
-                    UserGuid = _UserGuid,
-                    PostGuid = _PostGuid,
+                    UserId = _UserGuid,
+                    PostId = _PostGuid,
                     Liked = _status
                 };
                 _context.UserPostRelations.Add(_userpostRelation);
@@ -142,12 +142,12 @@ namespace Repositories{
         public void ValueChangePostLike(UserPostRelation _upr , Post _p , User _u, bool _l){
             int _s = _l ? 1:-1;
             foreach(PostTag _pt in _p.Tags){
-                UserTag _ut = _context.UserTags.FirstOrDefault(x=>x.UserGuid == _u.guId && x.TagGuid == _pt.TagGuid);
+                UserTag _ut = _context.UserTags.FirstOrDefault(x=>x.UserId == _u.Id && x.TagId == _pt.TagId);
                 if(_ut == null){
                     _context.UserTags.Add(new UserTag{
                         Likes = _s,
-                        UserGuid = _u.guId,
-                        TagGuid = _pt.TagGuid
+                        UserId = _u.Id,
+                        TagId = _pt.TagId
                     });
                 }
                 else{
@@ -164,16 +164,16 @@ namespace Repositories{
 
         public string ToggleUserCommentRelation(Guid _UserGuid, Guid _CommentGuid, bool _status){
             
-            UserCommentRelation _userCommentRelation = _context.UserCommentRelations.FirstOrDefault(x=>x.CommentGuid == _CommentGuid && x.UserGuid == _UserGuid);
-            Comment _comment = _context.Comments.FirstOrDefault(x => x.guId == _CommentGuid);
+            UserCommentRelation _userCommentRelation = _context.UserCommentRelations.FirstOrDefault(x=>x.CommentId == _CommentGuid && x.UserId == _UserGuid);
+            Comment _comment = _context.Comments.FirstOrDefault(x => x.Id == _CommentGuid);
 
             string _repsonse = _status.ToString();
             int _s = _status ? 1:-1;
 
             if(_userCommentRelation == null){
                 _userCommentRelation = new UserCommentRelation{
-                    UserGuid = _UserGuid,
-                    CommentGuid = _CommentGuid,
+                    UserId = _UserGuid,
+                    CommentId = _CommentGuid,
                     Liked = _status
                 };
                 _context.UserCommentRelations.Add(_userCommentRelation);

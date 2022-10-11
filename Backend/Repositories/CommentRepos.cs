@@ -10,20 +10,20 @@ namespace Repositories{
             _context = context ?? throw new NullReferenceException(nameof(context));
         }
 
-        public Comment GetCommentById(Guid _guid){
-            return _context.Comments.Where(x=>!x.SoftDeleted).FirstOrDefault(x=>x.guId == _guid);
+        public Comment GetCommentById(Guid _Id){
+            return _context.Comments.Where(x=>!x.SoftDeleted).FirstOrDefault(x=>x.Id == _Id);
         }
 
         // POST
         public Comment CreateComment(CommentEntryDto _input){
-            if(_context.Users.Where(x=>!x.SoftDeleted).FirstOrDefault(x=>x.guId == _input.UserGuid)==null)
+            if(_context.Users.Where(x=>!x.SoftDeleted).FirstOrDefault(x=>x.Id == _input.UserId)==null)
                 return null;
 
             Comment _comment = new Comment{
                 Likes = 0,
                 Content = _input.Content,
-                PostGuid = _input.PostGuid,
-                UserGuid = _input.UserGuid
+                PostId = _input.PostId,
+                UserId = _input.UserId
             };
 
             _context.Add(_comment);
@@ -34,8 +34,8 @@ namespace Repositories{
 
 
         // PUT
-        public Comment UpdateComment(Guid _guid, CommentEntryDto _input){
-            var _comment = _context.Comments.Find(_guid);
+        public Comment UpdateComment(Guid _Id, CommentEntryDto _input){
+            var _comment = _context.Comments.Find(_Id);
 
             _comment.Content = _input.Content;
             _comment.UpdatedDate = DateTime.UtcNow;

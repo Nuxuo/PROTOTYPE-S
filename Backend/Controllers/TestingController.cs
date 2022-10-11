@@ -56,9 +56,9 @@ namespace Controllers{
                 return BadRequest();
             if(await _repos.CreateComments(ammount * 3)==false)
                 return BadRequest();
-            if(await _repos.UserRelationPosts(ammount * 10)==false)
+            if(await _repos.UserRelationPosts(ammount)==false)
                 return BadRequest();
-            if(await _repos.UserRelationComments(ammount * 10)==false)
+            if(await _repos.UserRelationComments(ammount)==false)
                 return BadRequest();
             
             return Ok();

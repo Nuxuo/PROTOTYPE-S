@@ -24,7 +24,7 @@ namespace Profiles{
                 List<Guid> returnList = new List<Guid>();
                 foreach(UserPostRelation _t in _List){
                     if(_t.Liked == _s)
-                        returnList.Add(_t.PostGuid);
+                        returnList.Add(_t.PostId);
                 }
                 return returnList;
             }
@@ -33,7 +33,7 @@ namespace Profiles{
                 List<Guid> returnList = new List<Guid>();
                 foreach(UserCommentRelation _t in _List){
                     if(_t.Liked == _s)
-                        returnList.Add(_t.CommentGuid);
+                        returnList.Add(_t.CommentId);
                 }
                 return returnList;
             }

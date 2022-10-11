@@ -7,8 +7,8 @@ namespace Models{
         public string Content {get; set;}
         public int Likes {get; set;}
 
-        public Guid UserGuid {get; set;}
-        [ForeignKey("UserGuid")]
+        public Guid UserId {get; set;}
+        [ForeignKey("UserId")]
         public User Poster {get; set;}
 
         public ICollection<PostTag> Tags  {get; set;}

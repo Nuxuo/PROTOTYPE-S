@@ -11,13 +11,14 @@ namespace Repositories{
         }
 
         public async Task<bool> CreatePosts(int ammount){
+            List<User> _users = await _context.Users.ToListAsync(); int _userC = _users.Count();
             List<Tag> _tags = await _context.Tags.ToListAsync();
-            List<User> _users = await _context.Users.ToListAsync();
+
             Random rand = new Random();
 
             for(int i = 0; i < ammount; i ++){
                 Post _post = new Post{
-                    UserGuid = _users[rand.Next(0,_users.Count())].guId,
+                    UserId = _users[rand.Next(1,_userC)].Id,
                     HeadLine = "test"+i,
                     Content = "test"+i
                 };
@@ -26,8 +27,8 @@ namespace Repositories{
 
                 for(int _tagIndex = 0; _tagIndex < rand.Next(1,4); _tagIndex ++){
                     _context.PostTags.Add(new PostTag{
-                        PostGuid = _post.guId,
-                        TagGuid = _tags[rand.Next(1,_tags.Count())].guId
+                        PostId = _post.Id,
+                        TagId = _tags[rand.Next(1,_tags.Count())].Id
                     });
 
                     _context.SaveChanges();
@@ -46,8 +47,8 @@ namespace Repositories{
                 Comment _comment = new Comment{
                     Likes = 0,
                     Content = "test"+i,
-                    PostGuid = _posts[rand.Next(0,_postC)].guId,
-                    UserGuid = _users[rand.Next(0,_userC)].guId
+                    PostId = _posts[rand.Next(0,_postC)].Id,
+                    UserId = _users[rand.Next(0,_userC)].Id
                 };
 
                 _context.Add(_comment);
@@ -62,9 +63,12 @@ namespace Repositories{
             List<Post> _posts = await _context.Posts.ToListAsync(); int _postC = _posts.Count();
             Random rand = new Random();
             
-            for(int i = 0; i < ammount; i++){
-                ToggleUserPostRelation(_users[rand.Next(0,_userC)].guId,_posts[rand.Next(0,_postC)].guId,rand.Next(2) == 1 ? true : false);
+            foreach(User _u in _users){
+                for(int i = 0; i < ammount; i++){
+                    ToggleUserPostRelation(_u.Id,_posts[rand.Next(0,_postC)].Id,rand.Next(2) == 1 ? true : false);
+                }
             }
+
             
             return true;
 
@@ -73,9 +77,11 @@ namespace Repositories{
             List<User> _users = await _context.Users.ToListAsync(); int _userC = _users.Count();
             List<Comment> _comments = await _context.Comments.ToListAsync(); int _commentsC = _comments.Count();
             Random rand = new Random();
-            
-            for(int i = 0; i < ammount; i++){
-                ToggleUserCommentRelation(_users[rand.Next(0,_userC)].guId,_comments[rand.Next(0,_commentsC)].guId,rand.Next(2) == 1 ? true : false);
+
+            foreach(User _u in _users){
+                for(int i = 0; i < ammount; i++){
+                    ToggleUserCommentRelation(_u.Id,_comments[rand.Next(0,_commentsC)].Id,rand.Next(2) == 1 ? true : false);
+                }
             }
             
             return true;
@@ -84,15 +90,15 @@ namespace Repositories{
 
         
         public string ToggleUserPostRelation(Guid _UserGuid, Guid _PostGuid, bool _status){
-            UserPostRelation _userpostRelation = _context.UserPostRelations.FirstOrDefault(x=>x.PostGuid == _PostGuid && x.UserGuid == _UserGuid);
-            Post _post = _context.Posts.Include(x=>x.Tags).FirstOrDefault(x => x.guId == _PostGuid);
-            User _user = _context.Users.Include(x=>x.Tags).Include(x=>x.UserPostRelation).FirstOrDefault(x => x.guId == _UserGuid);
+            UserPostRelation _userpostRelation = _context.UserPostRelations.FirstOrDefault(x=>x.PostId == _PostGuid && x.UserId == _UserGuid);
+            Post _post = _context.Posts.Include(x=>x.Tags).FirstOrDefault(x => x.Id == _PostGuid);
+            User _user = _context.Users.Include(x=>x.Tags).Include(x=>x.UserPostRelation).FirstOrDefault(x => x.Id == _UserGuid);
             string _repsonse = _status.ToString();
 
             if(_userpostRelation == null){
                 _userpostRelation = new UserPostRelation{
-                    UserGuid = _UserGuid,
-                    PostGuid = _PostGuid,
+                    UserId = _UserGuid,
+                    PostId = _PostGuid,
                     Liked = _status
                 };
                 _context.UserPostRelations.Add(_userpostRelation);
@@ -119,12 +125,12 @@ namespace Repositories{
         public void ValueChangePostLike(UserPostRelation _upr , Post _p , User _u, bool _l){
             int _s = _l ? 1:-1;
             foreach(PostTag _pt in _p.Tags){
-                UserTag _ut = _context.UserTags.FirstOrDefault(x=>x.UserGuid == _u.guId && x.TagGuid == _pt.TagGuid);
+                UserTag _ut = _context.UserTags.FirstOrDefault(x=>x.UserId == _u.Id && x.TagId == _pt.TagId);
                 if(_ut == null){
                     _context.UserTags.Add(new UserTag{
                         Likes = _s,
-                        UserGuid = _u.guId,
-                        TagGuid = _pt.TagGuid
+                        UserId = _u.Id,
+                        TagId = _pt.TagId
                     });
                 }
                 else{
@@ -141,16 +147,16 @@ namespace Repositories{
 
         public string ToggleUserCommentRelation(Guid _UserGuid, Guid _CommentGuid, bool _status){
             
-            UserCommentRelation _userCommentRelation = _context.UserCommentRelations.FirstOrDefault(x=>x.CommentGuid == _CommentGuid && x.UserGuid == _UserGuid);
-            Comment _comment = _context.Comments.FirstOrDefault(x => x.guId == _CommentGuid);
+            UserCommentRelation _userCommentRelation = _context.UserCommentRelations.FirstOrDefault(x=>x.CommentId == _CommentGuid && x.UserId == _UserGuid);
+            Comment _comment = _context.Comments.FirstOrDefault(x => x.Id == _CommentGuid);
 
             string _repsonse = _status.ToString();
             int _s = _status ? 1:-1;
 
             if(_userCommentRelation == null){
                 _userCommentRelation = new UserCommentRelation{
-                    UserGuid = _UserGuid,
-                    CommentGuid = _CommentGuid,
+                    UserId = _UserGuid,
+                    CommentId = _CommentGuid,
                     Liked = _status
                 };
                 _context.UserCommentRelations.Add(_userCommentRelation);

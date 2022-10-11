@@ -36,125 +36,125 @@ namespace Controllers{
             return _result != null ? Ok(_mapped) : NotFound();
         }
 
-        [HttpGet("{_guid}")]
-        public async Task<IActionResult> GetUserById(Guid _guid){
-            if(await _repos.UserExists(_guid) == false)
+        [HttpGet("{_Id}")]
+        public async Task<IActionResult> GetUserById(Guid _Id){
+            if(await _repos.UserExists(_Id) == false)
                 return NotFound();
 
-            var _result = _repos.GetUserById(_guid);
+            var _result = _repos.GetUserById(_Id);
             var _mapped = _mapper.Map<UserDto>(_result);
-            _mapped.Links = CreateHateosLinks(_guid);
+            _mapped.Links = CreateHateosLinks(_Id);
 
-            LogInformation("Returned User ", _guid);
+            LogInformation("Returned User ", _Id);
 
             return _result != null ? Ok(_mapped) : BadRequest();
         }
 
-        [HttpGet("{_guid}/Posts")]
-        public async Task<IActionResult> GetUserPosts(Guid _guid){
-            if(await _repos.UserExists(_guid) == false)
+        [HttpGet("{_Id}/Posts")]
+        public async Task<IActionResult> GetUserPosts(Guid _Id){
+            if(await _repos.UserExists(_Id) == false)
                 return NotFound();
 
-            var _result = _repos.GetUsersPosts(_guid);
+            var _result = _repos.GetUsersPosts(_Id);
             var _mapped = _mapper.Map<IEnumerable<PostSimpleDto>>(_result);
 
-            LogInformation("Returned User posts ", _guid);
+            LogInformation("Returned User posts ", _Id);
 
             return _result != null ? Ok(_mapped) : BadRequest();
         }
    
-        [HttpGet("{_guid}/Comments")]
-        public async Task<IActionResult> GetUserComments(Guid _guid){
-            if(await _repos.UserExists(_guid) == false)
+        [HttpGet("{_Id}/Comments")]
+        public async Task<IActionResult> GetUserComments(Guid _Id){
+            if(await _repos.UserExists(_Id) == false)
                 return NotFound();
 
-            var _result = _repos.GetUsersComments(_guid);
+            var _result = _repos.GetUsersComments(_Id);
             var _mapped = _mapper.Map<IEnumerable<CommentSimplePostDto>>(_result);
 
-            LogInformation("Returned User comments ", _guid);
+            LogInformation("Returned User comments ", _Id);
 
             return _result != null ? Ok(_mapped) : BadRequest();
         }
 
-        [HttpGet("{_guid}/Tags")]
-        public async Task<IActionResult> GetUserTags(Guid _guid){
-            if(await _repos.UserExists(_guid) == false)
+        [HttpGet("{_Id}/Tags")]
+        public async Task<IActionResult> GetUserTags(Guid _Id){
+            if(await _repos.UserExists(_Id) == false)
                 return NotFound();
 
-            var _result = _repos.GetUsersTags(_guid);
+            var _result = _repos.GetUsersTags(_Id);
             var _mapped = _mapper.Map<IEnumerable<TagLikesDto>>(_result);
 
-            LogInformation("Returned User tags ", _guid);
+            LogInformation("Returned User tags ", _Id);
 
             return _result != null ? Ok(_mapped) : BadRequest();
         }
 
-        [HttpGet("{_guid}/Relation/Posts")]
-        public async Task<IActionResult> GetUserPostRelations(Guid _guid){
-            if(await _repos.UserExists(_guid) == false)
+        [HttpGet("{_Id}/Relation/Posts")]
+        public async Task<IActionResult> GetUserPostRelations(Guid _Id){
+            if(await _repos.UserExists(_Id) == false)
                 return NotFound();
 
-            var _result = _repos.GetUsersUserPostRelation(_guid);
+            var _result = _repos.GetUsersUserPostRelation(_Id);
             var _mapped = _mapper.Map<IEnumerable<UserPostRelationDto>>(_result);
 
-            LogInformation("Returned User post relation ", _guid);
+            LogInformation("Returned User post relation ", _Id);
 
             return _result != null ? Ok(_mapped) : BadRequest();
         }
 
-        [HttpGet("{_guid}/Relation/Comments")]
-        public async Task<IActionResult> GetUserCommentRelations(Guid _guid){
-            if(await _repos.UserExists(_guid) == false)
+        [HttpGet("{_Id}/Relation/Comments")]
+        public async Task<IActionResult> GetUserCommentRelations(Guid _Id){
+            if(await _repos.UserExists(_Id) == false)
                 return NotFound();
 
-            var _result = _repos.GetUsersUserCommentRelation(_guid);
+            var _result = _repos.GetUsersUserCommentRelation(_Id);
             var _mapped = _mapper.Map<IEnumerable<UserCommentRelationDto>>(_result);
 
-            LogInformation("Returned User comment relation ", _guid);
+            LogInformation("Returned User comment relation ", _Id);
 
             return _result != null ? Ok(_mapped) : BadRequest();
         }
 
 
-        [HttpGet("{_guid}/TargetedPosts/{ammount}")]
-        public async Task<IActionResult> GetUserTargetedPosts(Guid _guid, int ammount){
-            if(await _repos.UserExists(_guid) == false)
+        [HttpGet("{_Id}/TargetedPosts/{ammount}")]
+        public async Task<IActionResult> GetUserTargetedPosts(Guid _Id, int ammount){
+            if(await _repos.UserExists(_Id) == false)
                 return NotFound();
 
-            var _result = _repos.GetUsersTargetedPosts(_guid, ammount);
+            var _result = _repos.GetUsersTargetedPosts(_Id, ammount);
 
             if(_result == null ||  _result.Count() <= 0)
                 return BadRequest("ERROR 1002");
 
             // var _mapped = _mapper.Map<IEnumerable<PostDto>>(_result);
             
-            LogInformation("Returned "+ammount+" targeted posts for user ", _guid);
+            LogInformation("Returned "+ammount+" targeted posts for user ", _Id);
 
             return _result != null ? Ok(_result) : BadRequest();
         }
 
-        [HttpDelete("Soft/{_guid}")]
-        public async Task<IActionResult> SoftDeleteUser(Guid _guid){
-            if(await _repos.UserExists(_guid) == false)
+        [HttpDelete("Soft/{_Id}")]
+        public async Task<IActionResult> SoftDeleteUser(Guid _Id){
+            if(await _repos.UserExists(_Id) == false)
                 return NotFound();
 
-            if(!_repos.SoftDeleteUserById(_guid).Result)
+            if(!_repos.SoftDeleteUserById(_Id).Result)
                 return BadRequest();
 
-            LogInformation("Soft deleted user ", _guid);
+            LogInformation("Soft deleted user ", _Id);
 
             return Ok();
         }
 
-        [HttpDelete("Hard/{_guid}")]
-        public async Task<IActionResult> HardDeleteUser(Guid _guid){
-            if(await _repos.UserExists(_guid) == false)
+        [HttpDelete("Hard/{_Id}")]
+        public async Task<IActionResult> HardDeleteUser(Guid _Id){
+            if(await _repos.UserExists(_Id) == false)
                 return NotFound();
 
-            if(!_repos.HardDeleteUserById(_guid).Result)
+            if(!_repos.HardDeleteUserById(_Id).Result)
                 return BadRequest();
 
-            LogInformation("Hard deleted user ", _guid);
+            LogInformation("Hard deleted user ", _Id);
 
             return Ok();
         }
@@ -167,97 +167,97 @@ namespace Controllers{
                 return BadRequest("No");
 
             var _mapped = _mapper.Map<UserDto>(_result);
-            _mapped.Links = CreateHateosLinks(_result.guId,"");
+            _mapped.Links = CreateHateosLinks(_result.Id,"");
 
-            LogInformation("Created user ", _result.guId);
+            LogInformation("Created user ", _result.Id);
 
             return Ok(_mapped);
         }
 
-        [HttpPut("{_guid}")]
-        public async Task<IActionResult> UpdateUser(Guid _guid,[FromBody] UserEntryDto _input){
-            if(await _repos.UserExists(_guid) == false)
+        [HttpPut("{_Id}")]
+        public async Task<IActionResult> UpdateUser(Guid _Id,[FromBody] UserEntryDto _input){
+            if(await _repos.UserExists(_Id) == false)
                 return NotFound();
 
-            var _result = _repos.UpdateUser(_guid,_input);
+            var _result = _repos.UpdateUser(_Id,_input);
 
             if(_result == null)
                 return BadRequest("No");
 
-            LogInformation("Updated post ", _guid);
+            LogInformation("Updated post ", _Id);
 
             var _mapped = _mapper.Map<UserDto>(_result);
-            _mapped.Links = CreateHateosLinks(_guid,"");
+            _mapped.Links = CreateHateosLinks(_Id,"");
             
             return Ok(_mapped);
         }
 
-        [HttpPut("{_guid}/togglePostRelation/{PostGuid}/{status}")]
-        public async Task<IActionResult> togglePostRelation(Guid _guid,Guid PostGuid,bool status){
-            if(await _repos.UserExists(_guid) == false)
+        [HttpPut("{_Id}/togglePostRelation/{PostId}/{status}")]
+        public async Task<IActionResult> togglePostRelation(Guid _Id,Guid PostId,bool status){
+            if(await _repos.UserExists(_Id) == false)
                 return NotFound();
 
-            if(await _repos.PostExists(PostGuid) == false)
+            if(await _repos.PostExists(PostId) == false)
                 return NotFound();
 
-            var _result = _repos.ToggleUserPostRelation(_guid,PostGuid,status);
+            var _result = _repos.ToggleUserPostRelation(_Id,PostId,status);
 
             if(_result == null)
                 return BadRequest("ERROR #1005");
 
-            LogInformation("Toggled relation with user and post", _guid);
+            LogInformation("Toggled relation with user and post", _Id);
             
             return Ok(_result);
         }
 
-        [HttpPut("{_guid}/toggleCommentRelation/{CommentGuid}/{status}")]
-        public async Task<IActionResult> toggleCommentRelation(Guid _guid, Guid CommentGuid, bool status){
-            if(await _repos.UserExists(_guid) == false)
+        [HttpPut("{_Id}/toggleCommentRelation/{CommentId}/{status}")]
+        public async Task<IActionResult> toggleCommentRelation(Guid _Id, Guid CommentId, bool status){
+            if(await _repos.UserExists(_Id) == false)
                 return NotFound();
 
-            if(await _repos.CommentExists(CommentGuid) == false)
+            if(await _repos.CommentExists(CommentId) == false)
                 return NotFound();
 
-            var _result = _repos.ToggleUserCommentRelation(_guid,CommentGuid,status);
+            var _result = _repos.ToggleUserCommentRelation(_Id,CommentId,status);
 
             if(_result == null)
                 return BadRequest("ERROR #1006");
 
-            LogInformation("Toggled relation with user and Comment", _guid);
+            LogInformation("Toggled relation with user and Comment", _Id);
             
             return Ok(_result);
         }
         
         
-        private void LogInformation(string message, Guid _guid= new Guid()){
+        private void LogInformation(string message, Guid _Id= new Guid()){
             // if(id == 0)
             //     _logger.LogInformation(message,DateTime.UtcNow.ToLongTimeString());
 
-            _logger.LogInformation(message , _guid, DateTime.UtcNow.ToLongTimeString());
+            _logger.LogInformation(message , _Id, DateTime.UtcNow.ToLongTimeString());
         }
 
-        private List<Link> CreateHateosLinks(Guid _guid, string fields = "")
+        private List<Link> CreateHateosLinks(Guid _Id, string fields = "")
         {
             string ammount = "&ammount";
 
             var links = new List<Link>
             {
-                new Link(_linkGenerator.GetUriByAction(HttpContext, nameof(GetUserById), values: new {_guid}),
+                new Link(_linkGenerator.GetUriByAction(HttpContext, nameof(GetUserById), values: new {_Id}),
                 "self",
                 "GET"),
-                new Link(_linkGenerator.GetUriByAction(HttpContext, nameof(GetUserComments), values: new {_guid}),
+                new Link(_linkGenerator.GetUriByAction(HttpContext, nameof(GetUserComments), values: new {_Id}),
                 "self_comments",
                 "GET"),
-                new Link(_linkGenerator.GetUriByAction(HttpContext, nameof(GetUserPosts), values: new {_guid}),
+                new Link(_linkGenerator.GetUriByAction(HttpContext, nameof(GetUserPosts), values: new {_Id}),
                 "self_posts",
                 "GET"),
-                new Link(_linkGenerator.GetUriByAction(HttpContext, nameof(GetUserTags), values: new {_guid}),
+                new Link(_linkGenerator.GetUriByAction(HttpContext, nameof(GetUserTags), values: new {_Id}),
                 "self_tags",
                 "GET"),
-                new Link(_linkGenerator.GetUriByAction(HttpContext, nameof(GetUserPostRelations), values: new {_guid}),
+                new Link(_linkGenerator.GetUriByAction(HttpContext, nameof(GetUserPostRelations), values: new {_Id}),
                 "self_likes",
                 "GET"),
-                new Link(_linkGenerator.GetUriByAction(HttpContext, nameof(GetUserTargetedPosts), values: new {_guid, ammount }),
+                new Link(_linkGenerator.GetUriByAction(HttpContext, nameof(GetUserTargetedPosts), values: new {_Id, ammount }),
                 "targeted_posts",
                 "GET")
             };

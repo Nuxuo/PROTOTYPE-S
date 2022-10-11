@@ -15,28 +15,28 @@ namespace Repositories{
             .ToList();
         }
 
-        public IEnumerable<Post> GetPostsByUser(Guid _guid){
-            return _context.Posts.Where(x=>x.Poster.guId == _guid).ToList();
+        public IEnumerable<Post> GetPostsByUser(Guid _Id){
+            return _context.Posts.Where(x=>x.Poster.Id == _Id).ToList();
         }
 
-        public Post GetPostById(Guid _guid){
+        public Post GetPostById(Guid _Id){
             return _context.Posts
                 .Include(x=>x.Comments)
                 .Include(x=>x.Poster)
                 .Include(x => x.Tags)
                     .ThenInclude(x => x.Tag)
-            .FirstOrDefault(x => x.guId == _guid);
+            .FirstOrDefault(x => x.Id == _Id);
         }
 
-        public IEnumerable<Comment> GetPostsComments(Guid _guid){
-            return _context.Comments.Where(x => x.PostGuid == _guid).ToList();
+        public IEnumerable<Comment> GetPostsComments(Guid _Id){
+            return _context.Comments.Where(x => x.PostId == _Id).ToList();
         }
 
         // POST
         public Post CreatePost(PostEntryDto _input){
             List<PostTag> _postTagsList = new List<PostTag>();
             Post _post = new Post{
-                UserGuid = _input.UserGuid,
+                UserId = _input.UserId,
                 HeadLine = _input.Headline,
                 Content = _input.Content
             };
@@ -48,7 +48,7 @@ namespace Repositories{
                 Guid _TagGuid;
 
                 if(_tag != null){
-                    _TagGuid = _tag.guId;
+                    _TagGuid = _tag.Id;
                 }
                 else{
                     Tag _NewTag = new Tag{
@@ -58,13 +58,13 @@ namespace Repositories{
                     _context.Tags.Add(_NewTag);
                     _context.SaveChanges();
 
-                    _TagGuid = _NewTag.guId;
+                    _TagGuid = _NewTag.Id;
 
                 }
 
                 _context.PostTags.Add(new PostTag{
-                    PostGuid = _post.guId,
-                    TagGuid = _TagGuid
+                    PostId = _post.Id,
+                    TagId = _TagGuid
                 });
 
                 _context.SaveChanges();
@@ -75,8 +75,8 @@ namespace Repositories{
 
 
         // PUT
-        public Post UpdatePost(Guid _guid, PostEntryDto _input){
-            var _post = _context.Posts.Include(x => x.Poster).FirstOrDefault(x => x.guId == _guid);
+        public Post UpdatePost(Guid _Id, PostEntryDto _input){
+            var _post = _context.Posts.Include(x => x.Poster).FirstOrDefault(x => x.Id == _Id);
 
             _post.HeadLine = _input.Headline;
             _post.Content = _input.Content;
