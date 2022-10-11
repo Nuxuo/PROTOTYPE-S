@@ -10,5 +10,6 @@ namespace Models{
         public Guid TagId {get; set;}
         [ForeignKey("TagId")]
         public Tag Tag {get; set;}
+
     }
 }
