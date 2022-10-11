@@ -35,11 +35,7 @@ namespace Repositories{
         // POST
         public Post CreatePost(PostEntryDto _input){
             List<PostTag> _postTagsList = new List<PostTag>();
-            Post _post = new Post{
-                UserId = _input.UserId,
-                HeadLine = _input.Headline,
-                Content = _input.Content
-            };
+            Post _post = new Post(_input);
             _context.Posts.Add(_post);
             _context.SaveChanges();
 

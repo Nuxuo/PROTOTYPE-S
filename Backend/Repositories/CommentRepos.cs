@@ -19,12 +19,7 @@ namespace Repositories{
             if(_context.Users.Where(x=>!x.SoftDeleted).FirstOrDefault(x=>x.Id == _input.UserId)==null)
                 return null;
 
-            Comment _comment = new Comment{
-                Likes = 0,
-                Content = _input.Content,
-                PostId = _input.PostId,
-                UserId = _input.UserId
-            };
+            Comment _comment = new Comment(_input);
 
             _context.Add(_comment);
             _context.SaveChanges();

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using DataTransferObject;
 
 namespace Models{
     public class Post : BaseModel{
@@ -14,5 +15,13 @@ namespace Models{
         public ICollection<PostTag> Tags  {get; set;}
         public ICollection<Comment> Comments  {get; set;}
         public ICollection<UserPostRelation> UsersLiked  {get; set;}
+
+        public Post(){}
+        public Post(PostEntryDto _x){
+            this.Likes = 0;
+            this.HeadLine = _x.Headline;
+            this.Content = _x.Content;
+            this.UserId = _x.UserId;
+        }
     }
 }

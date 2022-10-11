@@ -79,14 +79,9 @@ namespace Repositories{
 
         // POST
         public User CreateUser(UserEntryDto _input){
-            User _User = new User{
-                Firstname = _input.Firstname,
-                Lastname = _input.Lastname,
-                Email = _input.Email,
-                Password = _input.Password
-            };
+            User _User = new User(_input);
 
-            _context.Users.Add(_User);
+            _context.Users.Add(new User(_input));
             _context.SaveChanges();
             
             return _User;
