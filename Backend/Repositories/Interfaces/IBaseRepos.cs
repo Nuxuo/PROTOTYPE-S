@@ -9,9 +9,7 @@ namespace Repositories{
 
 
         public Task<bool> HardDeletePostById(Guid _Id);
-        public Task<bool> SoftDeleteCommentById(Guid _Id);
         public Task<bool> HardDeleteCommentById(Guid _Id);
-        public Task<bool> SoftDeleteUserById(Guid _Id);
         public Task<bool> HardDeleteUserById(Guid _Id);
     }
 }

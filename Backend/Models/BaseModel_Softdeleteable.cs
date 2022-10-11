@@ -5,8 +5,6 @@ namespace Models{
         public bool SoftDeleted {get; set;}
 
         public BaseModel_Softdeleteable(){
-            CreatedDate = DateTime.Now;
-            UpdatedDate = DateTime.Now;
             SoftDeleted = false;
         }
     }

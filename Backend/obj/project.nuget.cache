@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "o4pvbq4fbwKChMotrpu3h17BBqmPMx3RmSE1Cf10mTAJjzd35fFGuRml6RKigDZ913S83Y9wMhqsdku1Kwq8Uw==",
+  "dgSpecHash": "Hx/K3ja08KQTLLz3Ts7wVQE0TVe+zgqb6lm9fsdzJwIsGAXExW/0e0MjxiRY/0k7mBISFjelmr3biuEqnXlRBA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\andre\\Desktop\\PROTOTYPE S\\Backend\\Restfull API.csproj",
+  "projectFilePath": "C:\\Users\\andre\\Desktop\\PROTOTYPE S\\Backend\\PROTOTYPE_S.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\andre\\.nuget\\packages\\automapper\\10.1.1\\automapper.10.1.1.nupkg.sha512",
     "C:\\Users\\andre\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\8.1.1\\automapper.extensions.microsoft.dependencyinjection.8.1.1.nupkg.sha512",

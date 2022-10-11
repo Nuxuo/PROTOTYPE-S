@@ -10,10 +10,10 @@ namespace Repositories{
         public Post GetPostById(Guid _Id);
 
         // POST
-        public Post CreatePost(PostEntryDto _input);
+        public Post CreatePost(PostEntryDto _entry);
 
 
         // PUT
-        public Post UpdatePost(Guid _Id, PostEntryDto _input);
+        public Post UpdatePost(Guid _Id, PostEntryDto _entry);
     }
 }

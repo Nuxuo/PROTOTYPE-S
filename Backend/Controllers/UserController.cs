@@ -160,8 +160,8 @@ namespace Controllers{
         }
         
         [HttpPost("")]
-        public ActionResult CreateUser([FromBody] UserEntryDto _input){
-            var _result = _repos.CreateUser(_input);
+        public ActionResult CreateUser([FromBody] UserEntryDto _entry){
+            var _result = _repos.CreateUser(_entry);
 
             if(_result == null)
                 return BadRequest("No");
@@ -175,11 +175,11 @@ namespace Controllers{
         }
 
         [HttpPut("{_Id}")]
-        public async Task<IActionResult> UpdateUser(Guid _Id,[FromBody] UserEntryDto _input){
+        public async Task<IActionResult> UpdateUser(Guid _Id,[FromBody] UserEntryDto _entry){
             if(await _repos.UserExists(_Id) == false)
                 return NotFound();
 
-            var _result = _repos.UpdateUser(_Id,_input);
+            var _result = _repos.UpdateUser(_Id,_entry);
 
             if(_result == null)
                 return BadRequest("No");

@@ -18,12 +18,14 @@ namespace Repositories{
         // public User GetUserByLastnameSearch(string lastname);
 
         // POST
-        public User CreateUser(UserEntryDto _input);
+        public User CreateUser(UserEntryDto _entry);
 
 
         // PUT
-        public User UpdateUser(Guid _Id, UserEntryDto _input);
-        public string ToggleUserPostRelation(Guid _UserGuid, Guid _PostGuid, bool _status);
-        public string ToggleUserCommentRelation(Guid _UserGuid, Guid _CommentGuid, bool _status);
+        public User UpdateUser(Guid _Id, UserEntryDto _entry);
+        public string ToggleUserPostRelation(Guid _UserId, Guid _PostId, bool _status);
+        public string ToggleUserCommentRelation(Guid _UserId, Guid _CommentId, bool _status);
+
+        public Task<bool> SoftDeleteUserById(Guid _Id);
     }
 }

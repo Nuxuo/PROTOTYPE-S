@@ -10,10 +10,13 @@ namespace Repositories{
         public Comment GetCommentById(Guid _Id);
 
         // POST
-        public Comment CreateComment(CommentEntryDto _input);
+        public Comment CreateComment(CommentEntryDto _entry);
 
 
         // PUT
-        public Comment UpdateComment(Guid _Id, CommentEntryDto _input);
+        public Comment UpdateComment(Guid _Id, CommentEntryDto _entry);
+
+
+        public Task<bool> SoftDeleteCommentById(Guid _Id);
     }
 }

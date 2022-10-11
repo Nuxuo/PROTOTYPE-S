@@ -87,18 +87,16 @@ namespace Repositories{
             return true;
 
         }
-
-        
-        public string ToggleUserPostRelation(Guid _UserGuid, Guid _PostGuid, bool _status){
-            UserPostRelation _userpostRelation = _context.UserPostRelations.FirstOrDefault(x=>x.PostId == _PostGuid && x.UserId == _UserGuid);
-            Post _post = _context.Posts.Include(x=>x.Tags).FirstOrDefault(x => x.Id == _PostGuid);
-            User _user = _context.Users.Include(x=>x.Tags).Include(x=>x.UserPostRelation).FirstOrDefault(x => x.Id == _UserGuid);
+        public string ToggleUserPostRelation(Guid _UserId, Guid _PostId, bool _status){
+            UserPostRelation _userpostRelation = _context.UserPostRelations.FirstOrDefault(x=>x.PostId == _PostId && x.UserId == _UserId);
+            Post _post = _context.Posts.Include(x=>x.Tags).FirstOrDefault(x => x.Id == _PostId);
+            User _user = _context.Users.Include(x=>x.Tags).Include(x=>x.UserPostRelation).FirstOrDefault(x => x.Id == _UserId);
             string _repsonse = _status.ToString();
 
             if(_userpostRelation == null){
                 _userpostRelation = new UserPostRelation{
-                    UserId = _UserGuid,
-                    PostId = _PostGuid,
+                    UserId = _UserId,
+                    PostId = _PostId,
                     Liked = _status
                 };
                 _context.UserPostRelations.Add(_userpostRelation);
@@ -121,7 +119,6 @@ namespace Repositories{
 
             return _repsonse;
         }
-
         public void ValueChangePostLike(UserPostRelation _upr , Post _p , User _u, bool _l){
             int _s = _l ? 1:-1;
             foreach(PostTag _pt in _p.Tags){
@@ -144,19 +141,18 @@ namespace Repositories{
             _p.Likes = _p.Likes + _s;
             _context.SaveChanges();
         }
-
-        public string ToggleUserCommentRelation(Guid _UserGuid, Guid _CommentGuid, bool _status){
+        public string ToggleUserCommentRelation(Guid _UserId, Guid _CommentId, bool _status){
             
-            UserCommentRelation _userCommentRelation = _context.UserCommentRelations.FirstOrDefault(x=>x.CommentId == _CommentGuid && x.UserId == _UserGuid);
-            Comment _comment = _context.Comments.FirstOrDefault(x => x.Id == _CommentGuid);
+            UserCommentRelation _userCommentRelation = _context.UserCommentRelations.FirstOrDefault(x=>x.CommentId == _CommentId && x.UserId == _UserId);
+            Comment _comment = _context.Comments.FirstOrDefault(x => x.Id == _CommentId);
 
             string _repsonse = _status.ToString();
             int _s = _status ? 1:-1;
 
             if(_userCommentRelation == null){
                 _userCommentRelation = new UserCommentRelation{
-                    UserId = _UserGuid,
-                    CommentId = _CommentGuid,
+                    UserId = _UserId,
+                    CommentId = _CommentId,
                     Liked = _status
                 };
                 _context.UserCommentRelations.Add(_userCommentRelation);
@@ -175,7 +171,6 @@ namespace Repositories{
 
             return _repsonse;
         }
-
         public async Task<bool> TruncateData(){
             _context.PostTags.RemoveRange(await _context.PostTags.ToListAsync());
             await _context.SaveChangesAsync();     

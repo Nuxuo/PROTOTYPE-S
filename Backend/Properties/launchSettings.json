@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "Restfull_API": {
+    "PROTOTYPE_S": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

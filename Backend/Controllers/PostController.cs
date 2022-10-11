@@ -74,8 +74,8 @@ namespace Controllers{
         }
         
         [HttpPost("")]
-        public ActionResult CreatePost([FromBody] PostEntryDto _input){
-            var _result = _repos.CreatePost(_input);
+        public ActionResult CreatePost([FromBody] PostEntryDto _entry){
+            var _result = _repos.CreatePost(_entry);
 
             if(_result == null)
                 return BadRequest("No");
@@ -89,11 +89,11 @@ namespace Controllers{
         }
 
         [HttpPut("{_Id}")]
-        public async Task<IActionResult> UpdatePost(Guid _Id,[FromBody] PostEntryDto _input){
+        public async Task<IActionResult> UpdatePost(Guid _Id,[FromBody] PostEntryDto _entry){
             if(await _repos.PostExists(_Id) == false)
                 return NotFound();
 
-            var _result = _repos.UpdatePost(_Id,_input);
+            var _result = _repos.UpdatePost(_Id,_entry);
 
             if(_result == null)
                 return BadRequest("No");

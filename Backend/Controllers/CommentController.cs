@@ -63,8 +63,8 @@ namespace Controllers{
         }
 
         [HttpPost("")]
-        public ActionResult CreateComment([FromBody] CommentEntryDto _input){
-            var _result = _repos.CreateComment(_input);
+        public ActionResult CreateComment([FromBody] CommentEntryDto _entry){
+            var _result = _repos.CreateComment(_entry);
 
             if(_result == null)
                 return BadRequest();
@@ -77,11 +77,11 @@ namespace Controllers{
         }
 
         [HttpPut("{_Id}")]
-        public async Task<ActionResult> UpdateComment(Guid _Id,[FromBody] CommentEntryDto _input){
+        public async Task<ActionResult> UpdateComment(Guid _Id,[FromBody] CommentEntryDto _entry){
             if(await _repos.CommentExists(_Id) == false)
                 return NotFound();
 
-            var _result = _repos.UpdateComment(_Id,_input);
+            var _result = _repos.UpdateComment(_Id,_entry);
 
             if(_result == null)
                 return BadRequest();
